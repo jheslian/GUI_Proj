@@ -1,4 +1,4 @@
-package graphics;
+package application;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +16,5 @@ public class AffichageWindow extends  UserInterface{
         this.setLocationRelativeTo( null );
         frame.setVisible(true);
     }
-
 
 }

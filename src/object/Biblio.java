@@ -1,7 +1,6 @@
 package object;
 
-import graphics.UserInterface;
-
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -37,6 +36,7 @@ public class Biblio {
     }
 
 
+
     /**
      * Méthode qui va à partir de la liste complète des livres de la
      * bibliothèque retourner une sous liste de titre de livres qui commence
@@ -47,10 +47,10 @@ public class Biblio {
         ArrayList<String> maSousListe = new ArrayList<>();
         for (int i = 0; i<this.getListDeLivres().size(); i++){
             Livre monLivreATester = this.getListDeLivres().get(i);
-            if (monLivreATester.getTitre().toLowerCase().startsWith("a")){
-                maSousListe.add(monLivreATester.getTitre());
+            if (monLivreATester.getTitre().toLowerCase().startsWith("a")) {
+                maSousListe.add( monLivreATester.getTitre() + " / " + monLivreATester.getAuteur() + " / " + monLivreATester.getAuteur()
+                        + " / " + monLivreATester.getLangue() + " / " + monLivreATester.getEditeur() + " / " + monLivreATester.getIndiceRef() );
             }
-
         }
 
         return maSousListe;
@@ -67,12 +67,50 @@ public class Biblio {
         for (int i = 0; i<this.getListDeLivres().size(); i++){
             Livre monLivreATester = this.getListDeLivres().get(i);
             if (monLivreATester.getIndiceRef() % 2 == 1){
-                maSousListe.add(monLivreATester.getTitre() + " / " + monLivreATester.getIndiceRef());
+                maSousListe.add( monLivreATester.getIndiceRef() +" / " +monLivreATester.getTitre() + " / "+ monLivreATester.getAuteur()+
+                                " / "+monLivreATester.getAuteur() + " / " + monLivreATester.getLangue() + " / " + monLivreATester.getEditeur());
             }
 
         }
         return maSousListe;
     }
 
+    public static boolean verifyIndiceRefOfBook(int indiceRef, ArrayList<Livre> listDeLivres) {
+        boolean isAlreadyExist = false;
+        for (int i = 0; i<listDeLivres.size() ; i++){
+            Livre livreAVerifier = listDeLivres.get(i);
+            if (livreAVerifier.getIndiceRef() == Integer.parseInt(String.valueOf(indiceRef))){
+                isAlreadyExist = true;
+                return isAlreadyExist;
+            }
+        }return isAlreadyExist;
+    }
+    public static void affichLivreA(Biblio maBiblio, JLabel labelCR){
+        String result = "";
+        for (int i = 0; i < maBiblio.getAllBooksWithNameStartByA().size(); i++) {
+            result += maBiblio.getAllBooksWithNameStartByA().get(i)+" ";
+        }
+
+        labelCR.setText(result);
+
+    }
+    public static void afficherIndexImpair(Biblio maBiblio, JLabel labelCR){
+        String result = "";
+        for (int i = 0; i < maBiblio.getAllBooksWhithIDSNOdd().size(); i++) {
+            result += maBiblio.getAllBooksWhithIDSNOdd().get(i)+" ";
+        }
+        labelCR.setText(result);
+    }
+    // function to show the lists of the books
+    public static void afficheLivreBiblio(Biblio maBiblio, JLabel labelCR) {
+        String cr = "";
+
+        for (int i = 0; i < maBiblio.getListDeLivres().size(); i++) {
+            cr += maBiblio.getListDeLivres().get( i ).getTitre() + " / " + maBiblio.getListDeLivres().get( i ).getAuteur() + "/" +
+                    maBiblio.getListDeLivres().get( i ).getAnnee() + " / " + maBiblio.getListDeLivres().get( i ).getEditeur() + "/" +
+                    maBiblio.getListDeLivres().get( i ).getLangue() + " / " + maBiblio.getListDeLivres().get( i ).getIndiceRef();
+        }
+        labelCR.setText( cr );
+    }
 
 }

@@ -1,6 +1,6 @@
 package main;
 
-import graphics.UserInterface;
+import application.UserInterface;
 
 import java.awt.*;
 

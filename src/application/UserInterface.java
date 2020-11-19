@@ -1,22 +1,16 @@
-package graphics;
+package application;
 
-import object.Biblio;
-import object.Livre;
-
+import object.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.awt.event.*;
 
-
-public class UserInterface extends JFrame {
-    Livre monLivre;
-    public JTextField titleField;
-    public static JTextField authorField;
-    public static JTextField editorField;
-    public static JTextField yearField;
-    public static JTextField langField;
+public class UserInterface extends JFrame{
+    JTextField titleField;
+    JTextField authorField;
+    JTextField editorField;
+    JTextField yearField;
+    JTextField langField;
     JTextField refField;
     JLabel titleLabel;
     JLabel authorLabel;
@@ -24,7 +18,6 @@ public class UserInterface extends JFrame {
     JLabel yearLabel;
     JLabel langLabel;
     JLabel refLabel;
-    JButton createButton;
     JLabel infoTitle;
     JLabel infoAuthor;
     JLabel infoYear;
@@ -32,7 +25,7 @@ public class UserInterface extends JFrame {
     JLabel infoLang;
     JLabel infoRef;
     JLabel info;
-    JMenuItem showBooks;
+
     public UserInterface(){
         super( "Library" );
 
@@ -55,7 +48,7 @@ public class UserInterface extends JFrame {
 
         //adding for availability
 
-        showBooks = new JMenuItem("show all books");
+        JMenuItem showBooks = new JMenuItem("show all books");
         bookMenu.add( showBooks );
         menu.add( bookMenu );
         //menu.add( bookOdd );
@@ -89,7 +82,7 @@ public class UserInterface extends JFrame {
         container.add( yearLabel );
 
         // year input
-         yearField = new JTextField();
+        yearField = new JTextField();
         yearField.setBounds( 250, 200, 250, 30 );
         container.add( yearField );
 
@@ -114,7 +107,7 @@ public class UserInterface extends JFrame {
         container.add( langField );
 
         // reference number label
-        refLabel = new JLabel( "Reference #" );
+        refLabel = new JLabel( "Ref ID No." );
         refLabel.setBounds( 150, 350, 150, 30 );
         container.add( refLabel );
 
@@ -124,7 +117,7 @@ public class UserInterface extends JFrame {
         container.add( refField );
 
         //button
-        createButton = new JButton("Create");
+        JButton createButton = new JButton( "Create" );
         createButton.setBounds( 350, 400, 150,35 );
         container.add( createButton );
         //createButton.addActionListener( (ActionListener) this );
@@ -174,117 +167,85 @@ public class UserInterface extends JFrame {
 
         Biblio maBiblio = new Biblio();
 
-        showBook.addActionListener( new ActionListener() {
-                                            public void actionPerformed(ActionEvent e) {
-                                                afficheLivreBiblio( maBiblio,AffichageWindow.label );
-                                                new AffichageWindow();
 
-                                            }
-                                        }
-        );
+        // accepts only a numerical value for year
+        yearField.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyChar() >= '0' && e.getKeyChar() <= '9') {
+                    yearField.setEditable(true);
+                } else {
+                    yearField.setEditable(false);
+                    yearField.setToolTipText("Enter only numeric digits(0-9)");
+                }
+            }
+        });
+        // accepts only a numerical value for reference
+        refField.addKeyListener(new KeyAdapter() {
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyChar() >= '0' && e.getKeyChar() <= '9') {
+                    refField.setEditable(true);
+                } else {
+                    refField.setEditable(false);
+                    refField.setToolTipText("Enter only numeric digits(0-9)");
+                }
+            }
+        });
 
-        createButton.addActionListener( new ActionListener() {
-                                    public void actionPerformed(ActionEvent e) {
-                                        info.setText( "Book you've created" );
-                                        infoTitle.setText( titleLabel.getText() + "     :     " + titleField.getText() );
-                                        infoAuthor.setText( authorLabel.getText() + "     :     " + authorField.getText() );
-                                        infoYear.setText( yearLabel.getText() + "     :     " + yearField.getText() );
-                                        infoEditor.setText( editorLabel.getText() + "     :     " + editorField.getText() );
-                                        infoLang.setText( langLabel.getText() + "     :     " + langField.getText() );
-                                        infoRef.setText( refLabel.getText() + "     :     " + refField.getText() );
 
-                                        if((verifyIndiceRefOfBook( Integer.parseInt( refField.getText() ), maBiblio.getListDeLivres()))==true){
-                                            JOptionPane.showMessageDialog( null,"Reference number already exist","error box", JOptionPane.ERROR_MESSAGE);
-                                        }else
-                                            createBook(titleField.getText(), authorField.getText(),Integer.parseInt( yearField.getText() ),editorField.getText(),langField.getText(),Integer.parseInt( refField.getText() ) ,maBiblio  );
+        //show list of the books
+        showBook.addActionListener( e -> {
+             Biblio.afficheLivreBiblio( maBiblio,AffichageWindow.label );
+             new AffichageWindow();
+        } );
 
-                                    }
-                                }
-        );
+        // creates a book and print when created successfully
+        createButton.addActionListener( e -> {
+            summary();
 
+            if((Biblio.verifyIndiceRefOfBook( Integer.parseInt( refField.getText() ), maBiblio.getListDeLivres()))==true){
+                JOptionPane.showMessageDialog( null,"Reference number already exist","Error reference #", JOptionPane.ERROR_MESSAGE);
+            }else
+                createBook(titleField.getText(), authorField.getText(),Integer.parseInt( yearField.getText() ),editorField.getText(),langField.getText(),Integer.parseInt( refField.getText() ) ,maBiblio  );
+        });
+
+        // open a new window w/ the list of all books that has odd number as reference
         oddBookButton.addActionListener( new ActionListener() {
-                                            public void actionPerformed(ActionEvent e) {
-                                                afficherIndexImpair( maBiblio,AffichageWindow.label );
-                                                new AffichageWindow();
-                                            }
-                                        }
-        );
-
+             public void actionPerformed(ActionEvent e) {
+                  Biblio.afficherIndexImpair( maBiblio,AffichageWindow.label );
+                  new AffichageWindow();
+             }
+        });
+        // open a new window w/ the list of all books that start w/ letter A
         lettreABookBtn.addActionListener( new ActionListener() {
-                                             public void actionPerformed(ActionEvent e) {
-                                                 affichLivreA( maBiblio,AffichageWindow.label );
-                                                 new AffichageWindow();
-                                             }
-                                         }
-        );
-
-
-    }
-    private void affichLivreA(Biblio maBiblio, JLabel labelCR){
-        String result = "";
-        for (int i = 0; i < maBiblio.getAllBooksWithNameStartByA().size(); i++) {
-            result += maBiblio.getAllBooksWithNameStartByA().get(i)+" ";
-        }
-
-        labelCR.setText(result);
-
+             public void actionPerformed(ActionEvent e) {
+                  Biblio.affichLivreA( maBiblio,AffichageWindow.label );
+                  new AffichageWindow();
+             }
+        });
     }
 
+    // function to create a book and print the content
     private void createBook( String titre, String auteur, int annee,String editeur, String langue, int indiceRef,   Biblio maBiblio) {
-        monLivre = new Livre( titre, auteur,annee,editeur,langue,indiceRef);
+        Livre monLivre = new Livre( titre, auteur,annee,editeur,langue,indiceRef);
         maBiblio.getListDeLivres().add(monLivre);
+    }
 
-        System.out.println(monLivre.getTitre());
-        System.out.println(monLivre.getAuteur());
-        System.out.println(monLivre.getAnnee());
-        System.out.println(monLivre.getEditeur());
-        System.out.println(monLivre.getLangue());
-        System.out.println(monLivre.getIndiceRef());
-
+    // show the summary of the book that was created
+    private void summary(){
+        info.setText( "Summary :" );
+        infoTitle.setText( titleLabel.getText() + "     :     " + titleField.getText() );
+        infoAuthor.setText( authorLabel.getText() + "     :     " + authorField.getText() );
+        infoYear.setText( yearLabel.getText() + "     :     " + yearField.getText() );
+        infoEditor.setText( editorLabel.getText() + "     :     " + editorField.getText() );
+        infoLang.setText( langLabel.getText() + "     :     " + langField.getText() );
+        infoRef.setText( refLabel.getText() + "     :     " + refField.getText() );
         titleField.setText( "" );
         authorField.setText( "" );
         yearField.setText( "" );
         editorField.setText( "" );
         langField.setText( "" );
         refField.setText( "" );
-
     }
-
-    private void afficheLivreBiblio(Biblio maBiblio, JLabel labelCR) {
-        String cr = "";
-
-        for (int i = 0; i < maBiblio.getListDeLivres().size(); i++) {
-            cr += maBiblio.getListDeLivres().get( i ).getTitre() + " / " + maBiblio.getListDeLivres().get( i ).getAuteur() + "/" +
-                    maBiblio.getListDeLivres().get( i ).getAnnee() + " / " + maBiblio.getListDeLivres().get( i ).getEditeur() + "/" +
-                    maBiblio.getListDeLivres().get( i ).getLangue() + " / " + maBiblio.getListDeLivres().get( i ).getIndiceRef();
-        }
-        labelCR.setText( cr );
-    }
-
-    private void afficherIndexImpair(Biblio maBiblio, JLabel labelCR){
-        String result = "";
-        for (int i = 0; i < maBiblio.getAllBooksWhithIDSNOdd().size(); i++) {
-            result += maBiblio.getAllBooksWhithIDSNOdd().get(i)+" ";
-        }
-        labelCR.setText(result);
-    }
-
-    private boolean verifyIndiceRefOfBook(int indiceRef, ArrayList<Livre> listDeLivres) {
-        System.out.println("=========");
-        System.out.println("access");
-        boolean isAlreadyExist = false;
-        for (int i = 0; i<listDeLivres.size() ; i++){
-            Livre livreAVerifier = listDeLivres.get(i);
-            if (livreAVerifier.getIndiceRef() == Integer.parseInt(String.valueOf(indiceRef))){
-                isAlreadyExist = true;
-                return isAlreadyExist;
-            }
-
-        }
-        return isAlreadyExist;
-    }
-
-
 
 }
 
