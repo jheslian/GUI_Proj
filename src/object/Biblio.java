@@ -1,5 +1,7 @@
 package object;
 
+import graphics.UserInterface;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -8,7 +10,7 @@ import java.util.HashMap;
  * différentes statistique sur le contenu de la bibliothèque.
  */
 
-public class Biblio {
+public class Biblio extends UserInterface {
     private ArrayList<Livre> listDeLivres = null;
     private HashMap<Integer, Livre> listDeLivresHashMap = null;
 
@@ -71,7 +73,6 @@ public class Biblio {
         }
         return maSousListe;
     }
-
 
 
 }
