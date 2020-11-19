@@ -1,22 +1,17 @@
 package object;
 
 
-import graphics.UserInterface;
-
-import static graphics.UserInterface.titleField;
-
 /**
  * Classe qui représente un objet livre qui est destiné
  * à être stocké dans un objet de type Bibliothèque.
  */
 public class Livre {
-
     private String titre;
     private String auteur;
-    private Integer annee;
+    private int annee;
     private String editeur;
     private String langue;
-    private Integer indiceRef;
+    private int indiceRef;
 
 
     public Livre(String titre, String auteur, int annee, String editeur, String langue, int indiceRef) {
@@ -53,25 +48,4 @@ public class Livre {
     }
 
 
-
-
-    public void setAuteur(String auteur) {
-        this.auteur = auteur;
-    }
-
-    public void setAnnee(int annee) {
-        this.annee = annee;
-    }
-
-    public void setEditeur(String editeur) {
-        this.editeur = editeur;
-    }
-
-    public void setLangue(String langue) {
-        this.langue = langue;
-    }
-
-    public void setIndiceRef(int indiceRef) {
-        this.indiceRef = indiceRef;
-    }
 }

@@ -1,7 +1,5 @@
 package object;
 
-import graphics.UserInterface;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -73,6 +71,7 @@ public class Biblio {
         }
         return maSousListe;
     }
+
 
 
 }

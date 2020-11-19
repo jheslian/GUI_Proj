@@ -8,11 +8,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import static object.Livre.setTitre;
 
-
-public class UserInterface extends JFrame implements  ActionListener{
-    JPanel container = new JPanel();
+public class UserInterface extends JFrame {
     public static JTextField titleField;
     public static JTextField authorField;
     public static JTextField editorField;
@@ -26,7 +23,6 @@ public class UserInterface extends JFrame implements  ActionListener{
     JLabel langLabel;
     JLabel refLabel;
     JButton createButton;
-    public static Biblio library;
     JLabel infoTitle;
     JLabel infoAuthor;
     JLabel infoYear;
@@ -34,34 +30,41 @@ public class UserInterface extends JFrame implements  ActionListener{
     JLabel infoLang;
     JLabel infoRef;
     JLabel info;
+    JMenuItem showBooks;
+    public UserInterface(){
+        super( "Library" );
 
-
-    public UserInterface() {
 
         // frame settings
         this.setDefaultCloseOperation( DISPOSE_ON_CLOSE );
-        this.setSize( 700,700 );
-        this.setTitle( "Library" );
+        this.setSize( 700, 700 );
         this.setLocationRelativeTo( null );
         this.setResizable( false );
+
+        Biblio maBiblio = new Biblio();
+
+        JPanel container = (JPanel)this.getContentPane();
+
         container.setLayout( null );
-        this.add( container );
+        //this.add( container );
+
 
         //creation of menu
         JMenuBar menu = new JMenuBar();
 
         //creation of items on menu bar
-        JMenu mangaBookMenu = new JMenu("Manga");
-        JMenu romanBookMenu = new JMenu("Roman  |");
-        JMenu magazineBookMenu = new JMenu("Magazine  |");
+        //JMenu bookLetterA = new JMenu("Books starts A");
+        //JMenu bookOdd = new JMenu("Book Odd reference");
+        JMenu bookMenu = new JMenu("Books");
 
         //adding for availability
-        menu.add( magazineBookMenu );
-        menu.add( romanBookMenu );
-        menu.add( mangaBookMenu );
+
+        showBooks = new JMenuItem("show all books");
+        bookMenu.add( showBooks );
+        menu.add( bookMenu );
+        //menu.add( bookOdd );
+        //menu.add( bookLetterA );
         this.setJMenuBar( menu );
-
-
 
         // title
         titleLabel = new JLabel( "Title" );
@@ -128,7 +131,7 @@ public class UserInterface extends JFrame implements  ActionListener{
         createButton = new JButton("Create");
         createButton.setBounds( 350, 400, 150,35 );
         container.add( createButton );
-        createButton.addActionListener( (ActionListener) this );
+        //createButton.addActionListener( (ActionListener) this );
 
         //info
         info = new JLabel();
@@ -160,18 +163,71 @@ public class UserInterface extends JFrame implements  ActionListener{
         infoRef.setBounds( 180,570,400,35 );
         container.add( infoRef );
 
+        JButton showBook = new JButton("All Books");
+        showBook.setBounds( 100,50,150,35 );
+        container.add( showBook );
 
 
+
+        showBook.addActionListener( new ActionListener() {
+                                            public void actionPerformed(ActionEvent e) {
+                                                afficheLivreBiblio( maBiblio,AffichageWindow.label );
+                                                new AffichageWindow();
+
+                                            }
+                                        }
+        );
+
+        createButton.addActionListener( new ActionListener() {
+                                    public void actionPerformed(ActionEvent e) {
+                                        info.setText( "Book you've created" );
+                                        infoTitle.setText( titleLabel.getText() + "     :     " + titleField.getText() );
+                                        infoAuthor.setText( authorLabel.getText() + "     :     " + authorField.getText() );
+                                        infoYear.setText( yearLabel.getText() + "     :     " + yearField.getText() );
+                                        infoEditor.setText( editorLabel.getText() + "     :     " + editorField.getText() );
+                                        infoLang.setText( langLabel.getText() + "     :     " + langField.getText() );
+                                        infoRef.setText( refLabel.getText() + "     :     " + refField.getText() );
+
+                                        createBook(titleField.getText(), authorField.getText(),Integer.parseInt( yearField.getText() ),editorField.getText(),langField.getText(),Integer.parseInt( refField.getText() ) ,maBiblio  );
+
+                                    }
+                                }
+        );
 
     }
-    /*
-    public JPanel information(){
-        JLabel infoTitle = new JLabel( titleLabel.getText());
-        infoTitle.setBounds( 200,450,400,35 );
-        container.add( infoTitle );
-        return container;
+
+    private void createBook( String titre, String auteur, int annee,String editeur, String langue, int indiceRef,   Biblio maBiblio) {
+        System.out.println(titre + " " + auteur);
+        Livre monLivre = new Livre( titre, auteur,annee,editeur,langue,indiceRef);
+        maBiblio.getListDeLivres().add(monLivre);
+        System.out.println(maBiblio);
+        System.out.println(monLivre.getTitre());
+        System.out.println(monLivre.getAuteur());
+        System.out.println(monLivre.getAnnee());
+        System.out.println(monLivre.getEditeur());
+        System.out.println(monLivre.getLangue());
+        System.out.println(monLivre.getIndiceRef());
+        titleField.setText( "" );
+        authorField.setText( "" );
+        yearField.setText( "" );
+        editorField.setText( "" );
+        langField.setText( "" );
+        refField.setText( "" );
+
     }
-*/
+
+    private void afficheLivreBiblio(Biblio maBiblio, JLabel labelCR) {
+        String cr = "";
+
+        for (int i = 0; i < maBiblio.getListDeLivres().size(); i++) {
+            cr += maBiblio.getListDeLivres().get( i ).getTitre() + " / " + maBiblio.getListDeLivres().get( i ).getAuteur() + "/" +
+                    maBiblio.getListDeLivres().get( i ).getAnnee() + " / " + maBiblio.getListDeLivres().get( i ).getEditeur() + "/" +
+                    maBiblio.getListDeLivres().get( i ).getLangue() + " / " + maBiblio.getListDeLivres().get( i ).getIndiceRef();
+        }
+        labelCR.setText( cr );
+    }
+}
+/*
     public void actionPerformed(ActionEvent e) {
         if (e.getSource()==createButton) {
             //information
@@ -184,30 +240,32 @@ public class UserInterface extends JFrame implements  ActionListener{
             infoLang.setText( langLabel.getText() + "     :     " + langField.getText() );
             infoRef.setText( refLabel.getText() + "     :     " + refField.getText() );
             Biblio library = new Biblio();
+
+            createBook( library );
+            affichLivreBiblio( library, AffichageWindow.label);
+            new AffichageWindow();
+
+            //System.out.println(monLivre.getAuteur());
+            //System.out.println(monLivre2.getTitre());
             //createBook(library);
-
-
-            Livre monLivre = new Livre(titleField.getText(), "author", 2002,"Gallimard", "FR", 45);
-            library.getListDeLivres().add(monLivre);
-            System.out.println(monLivre.getTitre());
-            System.out.println(monLivre.getAnnee());
-            System.out.println(monLivre.getAuteur());
-
-
-
         }
+            //printlibrary
+
+
+                //new AffichageWindow();
+                //System.out.println("working");
+
+
+            //affichLivreBiblio( library, AffichageWindow.label);
+            //new AffichageWindow();
+
+
     }
 
-    private void createBook( Biblio library) {
-        String tit = titleField.getText();
-        Livre monLivre = new Livre(tit, authorField.getText(), 2002,"Gallimard", "FR", 45);
-        library.getListDeLivres().add(monLivre);
-        System.out.println(monLivre.getTitre());
-        System.out.println(monLivre.getAnnee());
-        System.out.println(monLivre.getAuteur());
+ */
 
 
-    }
+
 /*
     private void createBook(Biblio library) {
         int yr = Integer.parseInt( yearField.getText());
@@ -225,11 +283,9 @@ public class UserInterface extends JFrame implements  ActionListener{
         library.getListDeLivres().add( book );
 
     }
+*/
 
- */
 
-
-}
 
 
 
