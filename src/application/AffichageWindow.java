@@ -6,7 +6,7 @@ import java.awt.*;
 public class AffichageWindow extends  UserInterface{
     JFrame frame = new JFrame();
     static JLabel label = new JLabel();
-    
+
     AffichageWindow(){
         label.setBounds( 0,0,700,700 );
         frame.add( label );

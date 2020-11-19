@@ -7,15 +7,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 
 public class UserInterface extends JFrame {
-    public static JTextField titleField;
+    Livre monLivre;
+    public JTextField titleField;
     public static JTextField authorField;
     public static JTextField editorField;
     public static JTextField yearField;
     public static JTextField langField;
-    public static JTextField refField;
+    JTextField refField;
     JLabel titleLabel;
     JLabel authorLabel;
     JLabel editorLabel;
@@ -40,14 +42,8 @@ public class UserInterface extends JFrame {
         this.setSize( 700, 700 );
         this.setLocationRelativeTo( null );
         this.setResizable( false );
-
-        Biblio maBiblio = new Biblio();
-
         JPanel container = (JPanel)this.getContentPane();
-
         container.setLayout( null );
-        //this.add( container );
-
 
         //creation of menu
         JMenuBar menu = new JMenuBar();
@@ -158,16 +154,25 @@ public class UserInterface extends JFrame {
         infoLang = new JLabel();
         infoLang.setBounds( 180,550,400,35 );
         container.add( infoLang );
+
         //info reference
         infoRef= new JLabel();
         infoRef.setBounds( 180,570,400,35 );
         container.add( infoRef );
 
         JButton showBook = new JButton("All Books");
-        showBook.setBounds( 100,50,150,35 );
+        showBook.setBounds( 50,50,150,35 );
         container.add( showBook );
 
+        JButton oddBookButton = new JButton("Odd Books");
+        oddBookButton.setBounds( 250,50,150,35 );
+        container.add( oddBookButton );
 
+        JButton lettreABookBtn = new JButton("Start with \"A\" Books");
+        lettreABookBtn.setBounds( 450,50,150,35 );
+        container.add( lettreABookBtn );
+
+        Biblio maBiblio = new Biblio();
 
         showBook.addActionListener( new ActionListener() {
                                             public void actionPerformed(ActionEvent e) {
@@ -188,25 +193,54 @@ public class UserInterface extends JFrame {
                                         infoLang.setText( langLabel.getText() + "     :     " + langField.getText() );
                                         infoRef.setText( refLabel.getText() + "     :     " + refField.getText() );
 
-                                        createBook(titleField.getText(), authorField.getText(),Integer.parseInt( yearField.getText() ),editorField.getText(),langField.getText(),Integer.parseInt( refField.getText() ) ,maBiblio  );
+                                        if((verifyIndiceRefOfBook( Integer.parseInt( refField.getText() ), maBiblio.getListDeLivres()))==true){
+                                            JOptionPane.showMessageDialog( null,"Reference number already exist","error box", JOptionPane.ERROR_MESSAGE);
+                                        }else
+                                            createBook(titleField.getText(), authorField.getText(),Integer.parseInt( yearField.getText() ),editorField.getText(),langField.getText(),Integer.parseInt( refField.getText() ) ,maBiblio  );
 
                                     }
                                 }
         );
 
+        oddBookButton.addActionListener( new ActionListener() {
+                                            public void actionPerformed(ActionEvent e) {
+                                                afficherIndexImpair( maBiblio,AffichageWindow.label );
+                                                new AffichageWindow();
+                                            }
+                                        }
+        );
+
+        lettreABookBtn.addActionListener( new ActionListener() {
+                                             public void actionPerformed(ActionEvent e) {
+                                                 affichLivreA( maBiblio,AffichageWindow.label );
+                                                 new AffichageWindow();
+                                             }
+                                         }
+        );
+
+
+    }
+    private void affichLivreA(Biblio maBiblio, JLabel labelCR){
+        String result = "";
+        for (int i = 0; i < maBiblio.getAllBooksWithNameStartByA().size(); i++) {
+            result += maBiblio.getAllBooksWithNameStartByA().get(i)+" ";
+        }
+
+        labelCR.setText(result);
+
     }
 
     private void createBook( String titre, String auteur, int annee,String editeur, String langue, int indiceRef,   Biblio maBiblio) {
-        System.out.println(titre + " " + auteur);
-        Livre monLivre = new Livre( titre, auteur,annee,editeur,langue,indiceRef);
+        monLivre = new Livre( titre, auteur,annee,editeur,langue,indiceRef);
         maBiblio.getListDeLivres().add(monLivre);
-        System.out.println(maBiblio);
+
         System.out.println(monLivre.getTitre());
         System.out.println(monLivre.getAuteur());
         System.out.println(monLivre.getAnnee());
         System.out.println(monLivre.getEditeur());
         System.out.println(monLivre.getLangue());
         System.out.println(monLivre.getIndiceRef());
+
         titleField.setText( "" );
         authorField.setText( "" );
         yearField.setText( "" );
@@ -226,64 +260,36 @@ public class UserInterface extends JFrame {
         }
         labelCR.setText( cr );
     }
-}
-/*
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource()==createButton) {
-            //information
 
-            info.setText( "Book you've created" );
-            infoTitle.setText( titleLabel.getText() + "     :     " + titleField.getText() );
-            infoAuthor.setText( authorLabel.getText() + "     :     " + authorField.getText() );
-            infoYear.setText( yearLabel.getText() + "     :     " + yearField.getText() );
-            infoEditor.setText( editorLabel.getText() + "     :     " + editorField.getText() );
-            infoLang.setText( langLabel.getText() + "     :     " + langField.getText() );
-            infoRef.setText( refLabel.getText() + "     :     " + refField.getText() );
-            Biblio library = new Biblio();
-
-            createBook( library );
-            affichLivreBiblio( library, AffichageWindow.label);
-            new AffichageWindow();
-
-            //System.out.println(monLivre.getAuteur());
-            //System.out.println(monLivre2.getTitre());
-            //createBook(library);
+    private void afficherIndexImpair(Biblio maBiblio, JLabel labelCR){
+        String result = "";
+        for (int i = 0; i < maBiblio.getAllBooksWhithIDSNOdd().size(); i++) {
+            result += maBiblio.getAllBooksWhithIDSNOdd().get(i)+" ";
         }
-            //printlibrary
-
-
-                //new AffichageWindow();
-                //System.out.println("working");
-
-
-            //affichLivreBiblio( library, AffichageWindow.label);
-            //new AffichageWindow();
-
-
+        labelCR.setText(result);
     }
 
- */
+    private boolean verifyIndiceRefOfBook(int indiceRef, ArrayList<Livre> listDeLivres) {
+        System.out.println("=========");
+        System.out.println("access");
+        boolean isAlreadyExist = false;
+        for (int i = 0; i<listDeLivres.size() ; i++){
+            Livre livreAVerifier = listDeLivres.get(i);
+            if (livreAVerifier.getIndiceRef() == Integer.parseInt(String.valueOf(indiceRef))){
+                isAlreadyExist = true;
+                return isAlreadyExist;
+            }
 
-
-
-/*
-    private void createBook(Biblio library) {
-        int yr = Integer.parseInt( yearField.getText());
-        int ref = Integer.parseInt( refField.getText());
-
-        Livre book = new Livre(titleField.getText(),
-                authorField.getText(),
-                234,
-                editorField.getText(),
-                langField.getText(),
-                 23456
-        );
-        System.out.println(book.getTitre());
-        System.out.println(book.getAnnee());
-        library.getListDeLivres().add( book );
-
+        }
+        return isAlreadyExist;
     }
-*/
+
+
+
+}
+
+
+
 
 
 
