@@ -29,7 +29,6 @@ public class UserInterface extends JFrame{
     public UserInterface(){
         super( "Library" );
 
-
         // frame settings
         this.setDefaultCloseOperation( DISPOSE_ON_CLOSE );
         this.setSize( 700, 700 );
@@ -38,22 +37,6 @@ public class UserInterface extends JFrame{
         JPanel container = (JPanel)this.getContentPane();
         container.setLayout( null );
 
-        //creation of menu
-        JMenuBar menu = new JMenuBar();
-
-        //creation of items on menu bar
-        //JMenu bookLetterA = new JMenu("Books starts A");
-        //JMenu bookOdd = new JMenu("Book Odd reference");
-        JMenu bookMenu = new JMenu("Books");
-
-        //adding for availability
-
-        JMenuItem showBooks = new JMenuItem("show all books");
-        bookMenu.add( showBooks );
-        menu.add( bookMenu );
-        //menu.add( bookOdd );
-        //menu.add( bookLetterA );
-        this.setJMenuBar( menu );
 
         // title
         titleLabel = new JLabel( "Title" );
@@ -154,16 +137,43 @@ public class UserInterface extends JFrame{
         container.add( infoRef );
 
         JButton showBook = new JButton("All Books");
-        showBook.setBounds( 50,50,150,35 );
+        showBook.setBounds( 100,30,150,35 );
         container.add( showBook );
 
         JButton oddBookButton = new JButton("Odd Books");
-        oddBookButton.setBounds( 250,50,150,35 );
+        oddBookButton.setBounds( 275,30,150,35 );
         container.add( oddBookButton );
 
         JButton lettreABookBtn = new JButton("Start with \"A\" Books");
-        lettreABookBtn.setBounds( 450,50,150,35 );
+        lettreABookBtn.setBounds( 450,30,150,35 );
         container.add( lettreABookBtn );
+
+        JRadioButton mangaRadioBtn = new JRadioButton("Manga");
+        mangaRadioBtn.setBounds( 150,65, 100, 35 );
+        mangaRadioBtn.setActionCommand( "manga" );
+        container.add( mangaRadioBtn );
+
+        JRadioButton magazineRadioBtn = new JRadioButton("Magazine");
+        magazineRadioBtn.setBounds( 250,65, 100, 35 );
+        magazineRadioBtn.setActionCommand( "magazine" );
+        container.add( magazineRadioBtn );
+
+
+        JRadioButton romanRadioBtn = new JRadioButton("Roman");
+        romanRadioBtn.setBounds( 350,65, 100, 35 );
+        romanRadioBtn.setActionCommand( "roman" );
+        container.add( romanRadioBtn );
+
+        JRadioButton otherRadioBtn = new JRadioButton("Other");
+        otherRadioBtn.setBounds( 450,65, 100, 35 );
+        otherRadioBtn.setActionCommand( "other" );
+        container.add( otherRadioBtn );
+
+        ButtonGroup grpRadioBtn = new ButtonGroup();
+        grpRadioBtn.add( magazineRadioBtn );
+        grpRadioBtn.add( mangaRadioBtn );
+        grpRadioBtn.add( romanRadioBtn );
+        grpRadioBtn.add( otherRadioBtn );
 
         Biblio maBiblio = new Biblio();
 
@@ -191,22 +201,32 @@ public class UserInterface extends JFrame{
             }
         });
 
-
         //show list of the books
         showBook.addActionListener( e -> {
              Biblio.afficheLivreBiblio( maBiblio,AffichageWindow.label );
              new AffichageWindow();
+
+            /* FOR RADIO BUTTON
+             if ()
+                 mangaRadioBtn.addActionListener( new ActionListener() {
+                     public void actionPerformed(ActionEvent e) {
+                         Biblio.afficheTypeBook( maBiblio,AffichageWindow.label );
+                         new AffichageWindow();
+                     }
+                 });
+             */
+
         } );
 
         // creates a book and print when created successfully
         createButton.addActionListener( e -> {
-            summary();
-
             if((Biblio.verifyIndiceRefOfBook( Integer.parseInt( refField.getText() ), maBiblio.getListDeLivres()))==true){
                 JOptionPane.showMessageDialog( null,"Reference number already exist","Error reference #", JOptionPane.ERROR_MESSAGE);
-            }else
-                createBook(titleField.getText(), authorField.getText(),Integer.parseInt( yearField.getText() ),editorField.getText(),langField.getText(),Integer.parseInt( refField.getText() ) ,maBiblio  );
-        });
+            }else {
+                createBook( titleField.getText(), authorField.getText(), Integer.parseInt( yearField.getText() ), editorField.getText(), langField.getText(), Integer.parseInt( refField.getText() ), maBiblio );
+                summary();
+            }
+            });
 
         // open a new window w/ the list of all books that has odd number as reference
         oddBookButton.addActionListener( new ActionListener() {
@@ -255,7 +275,7 @@ public class UserInterface extends JFrame{
 
 
 
-
+//explication de PO sont clair
 
 
 

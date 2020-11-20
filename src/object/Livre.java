@@ -12,6 +12,7 @@ public class Livre {
     private String editeur;
     private String langue;
     private int indiceRef;
+    private String type;
 
 
     public Livre(String titre, String auteur, int annee, String editeur, String langue, int indiceRef) {
@@ -46,5 +47,7 @@ public class Livre {
     public int getIndiceRef() {
         return indiceRef;
     }
+
+    public String getType() { return type; }
 
 }

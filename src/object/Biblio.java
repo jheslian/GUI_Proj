@@ -25,6 +25,7 @@ public class Biblio {
         listDeLivresHashMap = new HashMap<>();
     }
 
+
     /**
      * Méthode getter de la variable liste de livre qui
      * va nous permettres de consulter et Ajouter des livres
@@ -113,4 +114,26 @@ public class Biblio {
         labelCR.setText( cr );
     }
 
+
+    /* FOR RADIO BUTTON
+    public ArrayList<String> getAllBookType(Biblio maBiblio, JLabel label) {
+        ArrayList<String> maSousListe = new ArrayList<>();
+            for (int i = 0; i<this.getListDeLivres().size(); i++){
+                Livre monLivreATester = this.getListDeLivres().get(i);
+                if (getType=="manga") {
+                    maSousListe.add( monLivreATester.getTitre() + " / " + monLivreATester.getAuteur() + " / " + monLivreATester.getAuteur()
+                            + " / " + monLivreATester.getLangue() + " / " + monLivreATester.getEditeur() + " / " + monLivreATester.getIndiceRef() );
+                }
+            }
+            return maSousListe;
+        }
+    public static void afficheTypeBook(Biblio maBiblio, JLabel labelCR){
+        String result = "";
+        for (int i = 0; i < maBiblio.getAllBooksWithNameStartByA().size(); i++) {
+            result += maBiblio.getAllBooksWithNameStartByA().get(i)+" ";
+        }
+        labelCR.setText(result);
+    }
+
+     */
 }
